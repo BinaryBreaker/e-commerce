@@ -1,0 +1,45 @@
+from django.shortcuts import render ,HttpResponseRedirect
+from .models import Category,Product,ProductImages
+from django.db import connection
+
+# Create your views here.
+
+
+
+def AddProduct(response):
+    AllCat = Category.objects.all()
+    if response.method == "POST":
+        print(response.POST)
+        title = response.POST.get('title')
+        description = response.POST.get("description")
+        price =  response.POST.get("price")
+        tags =  response.POST.get("tttaaggg")
+        category = int(response.POST.get("cat"))
+        stock = response.POST.get("stock")
+        Brand = response.POST.get("Brand")
+        size = response.POST.get("sssiiizzee")
+        color = response.POST.get("colorss")
+        product = Product(
+            title=title,
+            description=description,
+            category = Category.objects.get(id=category),
+            Price=int(price),
+            Stock=int(stock),
+            Brand=Brand,
+            tags = tags,
+            sizes = size,
+            colors = color
+        )
+        product.save()
+        images =  response.FILES.getlist("upload_imgs[]")
+        for  image in images:
+            primage = ProductImages(image = image,product=product)
+            primage.save()
+
+    return render(response, "CommerceAdmin/AddProduct.html", {"category":AllCat})
+
+
+
+def AddCatrgory(response):
+
+    return render(response, "CommerceAdmin/AddCatrgory.html", {})
